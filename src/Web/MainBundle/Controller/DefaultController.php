@@ -23,7 +23,7 @@ class DefaultController extends Controller
 
         $request = $this->get('request');
         $referer = $request->headers->get('referer');  
-        
+
         var_dump($referer);
     	// Création du formulaire
     	$link = new Link();
@@ -218,7 +218,7 @@ class DefaultController extends Controller
         else {
             $infoLink->setClicks($infoLink->getClicks() + 1);
             $lastClick = new \DateTime();
-            $info->setTimeLastClicked($lastClick);
+            $infoLink->setTimeLastClicked($lastClick);
             $em->persist($infoLink);
             $em->flush();
             // Si le lien est toujours actif
