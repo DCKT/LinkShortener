@@ -24,7 +24,6 @@ class DefaultController extends Controller
         $request = $this->get('request');
         $referer = $request->headers->get('referer');  
 
-        var_dump($referer);
     	// Création du formulaire
     	$link = new Link();
         $form = $this->createFormBuilder($link)
@@ -36,10 +35,6 @@ class DefaultController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
         $link_list = $repo->getUserLink($user);
     
-        /*        
-        $request = $this->container->get('request');
-        $routeName = $request->get('_route');
-        */
         return $this->render('WebMainBundle:Default:index.html.twig', array(
         	'form' => $form->createView(),
         	'link_list' => $link_list
