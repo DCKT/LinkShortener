@@ -23,6 +23,7 @@ class DefaultController extends Controller
 
         $request = $this->get('request');
         $referer = $request->headers->get('referer');  
+        var_dump($referer);
 
     	// Création du formulaire
     	$link = new Link();
