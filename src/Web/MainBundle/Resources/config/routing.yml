@@ -1,0 +1,23 @@
+index:
+    pattern:  /
+    defaults: { _controller: WebMainBundle:Default:index }
+
+add_link:
+    pattern: /add-link
+    defaults: { _controller: WebMainBundle:Default:addLink }
+
+info_link:
+    pattern: /info-link/{link}
+    defaults: { _controller: WebMainBundle:Default:infoLink}
+
+disabled_link:
+    pattern: /disabled/{link}
+    defaults: { _controller: WebMainBundle:Default:disabled }
+
+remove_link:
+    pattern: /remove/{link}
+    defaults: { _controller: WebMainBundle:Default:remove }
+
+redirect_to:
+    pattern: /{link}
+    defaults: { _controller: WebMainBundle:Default:redirectTo }

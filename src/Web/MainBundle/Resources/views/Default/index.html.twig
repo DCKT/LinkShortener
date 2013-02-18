@@ -1,0 +1,117 @@
+{% extends "WebMainBundle::layout.html.twig"  %}
+
+
+{% block body %}
+
+<div class="hero-unit" style="height:50px">
+	<form class="form-inline" style="margin-top:-50px" method="post" action="{{ path('add_link') }}" {{form_enctype(form) }}>
+
+		<legend>
+			<h2>New URL</h2>
+		</legend>
+		{{ form_label (form.name, "Name :") }}
+		{{ form_widget (form.name, { "attr" : { "class" : "span3"} }) }}
+
+		{{ form_label (form.OriginalURL, "URL :")}}
+		{{ form_widget (form.OriginalURL, { "attr" : { "class" : "span5"} }) }}
+
+		<input type="submit" value="Generate" class="btn btn-warning" />
+	</form>
+</div>
+
+
+<table class="table table-bordered link-list">
+	<tr class="info">
+		<th>Name</th>
+		<th>Original URL</th>
+		<th>Shortened URL</th>
+		<th>Clicks</th>
+		<th>Date created</th>
+		<th>Action</th>
+	</tr>
+
+	<tbody>
+		{% for link in link_list%}
+		<tr id="{{ link.shortenedURL }}" class="
+			{% if( link.enabled == 0) %}
+				warning
+			{% endif %}
+		">
+			<td>
+				{{ link.name }}
+			</td>
+			<td>
+				{{ link.originalURL }}
+			</td>
+			<td>
+				http://suplink.com/{{ link.shortenedURL }}
+			</td>
+			<td>
+				{{ link.clicks }}
+			</td>
+			<td>
+				{{ link.dateCreated|date("d/m/Y") }}
+			</td>
+			<td>
+				<a href="{{ path('info_link', { 'link' : link.name }) }}" class="btn btn-inverse btn-mini btn-block">	Infos
+				</a>
+				<div class="btn-group"  style="margin-top:5px;">
+					{% if link.enabled == 1 %}
+						<a href="{{ path('disabled_link', {link : link.shortenedURL}) }}" data-name="{{ link.shortenedURL }}" class="btn btn-mini active" id="ableLink">
+							Enabled
+						</a>
+					{% else %}
+						<a href="{{ path('disabled_link', {link : link.shortenedURL}) }}" data-name="{{ link.shortenedURL }}" class="btn btn-mini" id="ableLink">
+							Disabled
+						</a>
+					{% endif %}
+					<a href="{{ path('remove_link', {link : link.shortenedURL}) }}" class="btn btn-danger btn-mini" id="removeLink" data-name="{{ link.shortenedURL }}">
+						Remove
+					</a>
+				</div>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#removeLink").click(function(e){
+		var current_row = $(this).data('name');
+		e.preventDefault();
+		$.ajax({
+			type: "POST",
+			data: current_row,
+			url: $(this).attr('href'),
+			success: function() {
+				$("tr#"+ current_row).remove();
+			}
+		})
+	});
+
+	$("#ableLink").click(function(e){
+		var currentBtn = $("a#ableLink");
+		var current_row = $(this).data('name');
+		e.preventDefault();
+		$.ajax({
+			type: "POST",
+			data: current_row,
+			url: $(this).attr('href'),
+			success: function() {
+				currentBtn.toggleClass('active');
+				$("tr#"+ current_row).toggleClass('warning')
+				if (currentBtn.text() == "Enabled") {
+					currentBtn.text("Disabled");
+				}
+				else {
+					currentBtn.text("Enabled");
+				}
+			}
+		})
+	});
+});
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,39 @@
+{% extends "WebMainBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+
+{% block body %}
+{% if error %}
+    <div  class="alert alert-error alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ error|trans({}, 'FOSUserBundle') }}
+    </div>
+{% endif %}
+<div class="row">
+    <div class='span4 offset4' style="margin-top:10px;">
+        <legend>Login
+            <a href="{{ path('fos_user_registration_register') }}" class="btn btn-primary btn-disabled" style="float:right; margin-top:7px">
+                Register
+            </a>
+        </legend>
+        <form action="{{ path("fos_user_security_check") }}" method="post" >
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+            <label for="username">Login :</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" class="span4" />
+
+            <label for="password">Password :</label>
+            <input type="password" id="password" name="_password" required="required" class="span4" />
+            <br />
+            <input type="checkbox" id="remember_me" name="_remember_me" value="on" style="float:left; margin-right:15px"/>
+            <label for="remember_me" style="cursor:pointer; ">
+            	Garder ma session active
+            </label>
+
+            <input type="submit" id="_submit" name="_submit" value="Log me" class="btn btn-info btn-large span3" style="margin-left:45px; " />
+        </form>
+    </div>
+    
+</div>
+{% endblock %}
+{% endblock fos_user_content %}

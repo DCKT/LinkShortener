@@ -1,0 +1,31 @@
+{% extends "WebMainBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+{% block body %}
+
+<div class="alert alert-danger">
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  {{ form_errors(form)}}
+</div>
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+
+	{{ form_label (form.username, "Username :") }}
+    {{ form_widget (form.username) }}
+
+    {{ form_label (form.email, "Email :") }}
+    {{ form_widget (form.email) }}
+
+	{{ form_label (form.plainPassword.first, "Password :") }}
+    {{ form_widget (form.plainPassword.first) }}
+
+	{{ form_label (form.plainPassword.second, "Password confirmation :") }}
+    {{ form_widget (form.plainPassword.second) }}    
+    {{ form_widget(form._token) }}
+    {#{{ form_widget(form) }} #}
+    <div>
+        <input type="submit" class="btn btn-success btn-large" value="Create your account" />
+    </div>
+</form>
+
+{% endblock %}
+{% endblock fos_user_content %}

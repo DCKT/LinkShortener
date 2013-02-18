@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+ 
+    <title>{% block title %}Web-Project{% endblock %}</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/morris.min.js') }}"></script>
+
+    {% block stylesheets %}
+      <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
+      <link rel="stylesheet" type="text/css" href="{{ asset('css/morris.css') }}">
+    {% endblock %}
+
+    
+  </head>
+ 
+  <body>
+
+<!-- Menu -->
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="navbar-inner">
+        <a class="brand" href="{{ path('index') }}">SupLink</a>
+        <ul class="nav">
+             
+        </ul>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li class="dropdown login-btn">
+                    <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-user"></i>
+                        {{ app.user.username }}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                                <a href="{{ path('fos_user_profile_edit')}}">
+                                    Editer mon profil
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                        <li>
+                            <a href="{{ path('fos_user_security_logout') }}">
+                                Déconnexion
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% else %}
+                <a class="btn btn-success login-btn" href="{{ path('fos_user_security_login') }}">
+                    Login
+                </a>
+            {% endif %}
+      </div>
+    </div>
+
+<!-- Page -->
+        <div class="container">
+            <div class="row">
+                <div id="content" class="span12">
+                    <div class="page-header center">
+                        <h1>SupLink - Another URL Shortener</h1>
+                    </div>
+                    {% block body %}
+                    {% endblock %}
+                </div>
+            </div>
+ <!-- Footer -->
+        <footer class="bot-page">
+            © 2013 SupLink - A project developed by SUPINFO <a href="http://www.dck.me">Student</a>
+        </footer>
+    </div>
+  </body>
+</html>

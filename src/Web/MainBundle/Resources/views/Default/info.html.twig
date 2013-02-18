@@ -1,0 +1,21 @@
+{% extends "WebMainBundle::layout.html.twig" %}
+
+{% block body %}
+<div class="hero-unit" style="height:20px">
+	<div style="margin-top:-40px">
+		<h2>
+			{{ link.name }}
+			<span class="label label-warning">
+				<h3 style="text-align:center; padding:0;margin:0;">{{ link.clicks}}</h3> clicks
+			</span>
+		</h2>
+		<a href="{{ link.originalURL }}">
+			{{ link.originalURL }}
+		</a>
+		>
+		<a href="{{ link.shortenedURL }}">
+			{{ link.shortenedURL }}
+		</a>
+	</div>
+</div>
+{% endblock %}
