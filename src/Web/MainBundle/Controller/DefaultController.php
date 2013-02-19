@@ -4,6 +4,7 @@ namespace Web\MainBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Web\MainBundle\Entity\Link;
+use Web\MainBundle\Entity\Referer;
 use Symfony\Component\HttpFoundation\Response;
 use Web\MainBundle\Controller\Date;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -20,10 +21,6 @@ class DefaultController extends Controller
          if (!is_object($user)):
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         endif;
-
-        $request = $this->get('request');
-        $referer = $request->headers->get('referer');  
-        var_dump($referer);
 
     	// Création du formulaire
     	$link = new Link();
@@ -173,14 +170,14 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
         $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
-        
+        $request = $this->container->get('request');
+
         /* 
             Gestion du conflit avec la route /login 
 
             On vérifie si infoLink n'est pas un objet
         */
         if (!is_object($infoLink)) {
-            $request = $this->container->get('request');
             /* @var $request \Symfony\Component\HttpFoundation\Request */
             $session = $request->getSession();
             /* @var $session \Symfony\Component\HttpFoundation\Session */
@@ -212,6 +209,11 @@ class DefaultController extends Controller
         }
 
         else {
+            $referer = $request->headers->get('referer');
+            if ($referer != NULL) {
+                $nbReferer = $repo->findOneBy(array('websiteUrl' => $referer));
+                var_dump($nbReferer);
+            }  
             $infoLink->setClicks($infoLink->getClicks() + 1);
             $lastClick = new \DateTime();
             $infoLink->setTimeLastClicked($lastClick);

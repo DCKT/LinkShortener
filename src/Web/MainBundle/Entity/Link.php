@@ -72,6 +72,13 @@ class Link
     * @ORM\Column(name="timeLastClicked", type="date");
     */
     private $timeLastClicked;
+
+    /**
+    *
+    * @ORM\ManyToMany(targetEntity="Web\MainBundle\Entity\Referer", cascade={"persist"})
+    */
+    private $referer;
+
     /**
      * Get id
      *
@@ -281,5 +288,38 @@ class Link
     public function getTimeLastClicked()
     {
         return $this->timeLastClicked;
+    }
+
+    /**
+     * Add referer
+     *
+     * @param \Web\UserBundle\Entity\Referer $referer
+     * @return Link
+     */
+    public function addReferer(\Web\UserBundle\Entity\Referer $referer)
+    {
+        $this->referer[] = $referer;
+    
+        return $this;
+    }
+
+    /**
+     * Remove referer
+     *
+     * @param \Web\UserBundle\Entity\Referer $referer
+     */
+    public function removeReferer(\Web\UserBundle\Entity\Referer $referer)
+    {
+        $this->referer->removeElement($referer);
+    }
+
+    /**
+     * Get referer
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getReferer()
+    {
+        return $this->referer;
     }
 }
