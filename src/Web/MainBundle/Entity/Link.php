@@ -293,10 +293,10 @@ class Link
     /**
      * Add referer
      *
-     * @param \Web\UserBundle\Entity\Referer $referer
+     * @param \Web\MainBundle\Entity\Referer $referer
      * @return Link
      */
-    public function addReferer(\Web\UserBundle\Entity\Referer $referer)
+    public function addReferer(\Web\MainBundle\Entity\Referer $referer)
     {
         $this->referer[] = $referer;
     
@@ -306,9 +306,9 @@ class Link
     /**
      * Remove referer
      *
-     * @param \Web\UserBundle\Entity\Referer $referer
+     * @param \Web\MainBundle\Entity\Referer $referer
      */
-    public function removeReferer(\Web\UserBundle\Entity\Referer $referer)
+    public function removeReferer(\Web\MainBundle\Entity\Referer $referer)
     {
         $this->referer->removeElement($referer);
     }
