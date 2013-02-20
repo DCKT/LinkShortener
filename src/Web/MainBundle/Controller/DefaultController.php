@@ -221,28 +221,29 @@ class DefaultController extends Controller
             // On récupère le site d'ou l'utilisateur vient
             $referer = $request->headers->get('referer');
             
-            $repoRef = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Referer');
-            $test = $infoLink->getReferer()->toArray();
-            $check = false;
+            if ($referer != NULL):
+                $repoRef = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Referer');
+                $test = $infoLink->getReferer()->toArray();
+                $check = false;
 
-            foreach ($test as $t) {
-                if ($t->getWebsiteUrl() == "to"):
-                    $t->setTotal($t->getTotal() + 1);
-                    $check = true;
-                    break;
+                foreach ($test as $t) {
+                    if ($t->getWebsiteUrl() == $referer):
+                        $t->setTotal($t->getTotal() + 1);
+                        $check = true;
+                        break;
+                    endif;
+                }
+                if ($check == false):
+                    $ref = new Referer();
+                    $ref->setWebsiteUrl($referer);
+                    $ref->setTotal(1);
+                    $infoLink->addReferer($ref);
                 endif;
-            }
-            if ($check == false) {
-                $ref = new Referer();
-                $ref->setWebsiteUrl("to");
-                $ref->setTotal(1);
-                $infoLink->addReferer($ref);
-            }
 
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($infoLink);
-            $manager->flush();
-            
+                $manager = $this->getDoctrine()->getManager();
+                $manager->persist($infoLink);
+                $manager->flush();
+            endif;
 
             $infoLink->setClicks($infoLink->getClicks() + 1);
             $lastClick = new \DateTime();
@@ -251,12 +252,11 @@ class DefaultController extends Controller
             $em->flush();
 
             // Si le lien est toujours actif
-            if ($infoLink->getEnabled() == 1) {
+            if ($infoLink->getEnabled() == 1):
                 return $this->redirect($infoLink->getOriginalURL());
-            }
-            else {
+            else:
                 return new Response("Ce lien est désactivé.");
-            } 
+            endif;
         }
     }
     protected function renderLogin(array $data)
