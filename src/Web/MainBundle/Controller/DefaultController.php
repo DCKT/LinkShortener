@@ -16,7 +16,12 @@ class DefaultController extends Controller
     public function indexAction()
     {
     	$user = $this->container->get('security.context')->getToken()->getUser();
+        $ip = $this->get('request')->server->get('REMOTE_ADDR');
+        if (!empty($ip)) {
+           $country = file_get_contents('http://api.hostip.info/country.php?ip='.$ip);
+        }
 
+        var_dump($country);
         // Si l'utilisateur n'est pas connecté, on le redirige
          if (!is_object($user)):
             return $this->redirect($this->generateUrl('fos_user_security_login'));
