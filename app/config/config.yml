@@ -69,5 +69,5 @@ fos_user:
         confirmation:
             enabled:    true
             from_email:
-                address:        noreply@acmedemo.com
-                sender_name:    Acme Demo App
+                address:        noreply@suplink.com
+                sender_name:    SupLink
