@@ -119,7 +119,13 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         endif;
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
-        $infoLink = $repo->findOneBy(array('name' => $link ));
+        $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
+        
+        // On vérifie si le lien existe
+        if (!is_object($infoLink)) {
+            return new Response("Lien  inexistant");
+        }
+
         return $this->render('WebMainBundle:Default:info.html.twig', array(
             'link' => $infoLink,
         ));
@@ -207,19 +213,36 @@ class DefaultController extends Controller
                 'csrf_token' => $csrfToken,
             ));
         }
-
+        // On redirige l'user vers le lien
         else {
+            // On récupère le site d'ou l'utilisateur vient
             $referer = $request->headers->get('referer');
             if ($referer != NULL) {
-                $nbReferer = $repo->findOneBy(array('websiteUrl' => $referer));
-                var_dump($nbReferer);
-                die();
+                $repoRef = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Referer');
+                $test = $infoLink->getReferer()->toArray();
+
+                foreach ($test as $t) {
+                    if ($t->getWebsiteUrl() == $referer):
+                        $t->setTotal($t->setTotal() + 1);
+                        break;
+                    else:
+                        $ref = new Referer();
+                        $ref->setWebsiteUrl($referer);
+                        $ref->setTotal(1);
+                        $infoLink->addReferer($ref);
+                    endif;
+                }
+                $manager = $this->getDoctrine()->getManager();
+                $manager->persist($infoLink);
+                $manager->flush();
             }  
+
             $infoLink->setClicks($infoLink->getClicks() + 1);
             $lastClick = new \DateTime();
             $infoLink->setTimeLastClicked($lastClick);
             $em->persist($infoLink);
             $em->flush();
+
             // Si le lien est toujours actif
             if ($infoLink->getEnabled() == 1) {
                 return $this->redirect($infoLink->getOriginalURL());

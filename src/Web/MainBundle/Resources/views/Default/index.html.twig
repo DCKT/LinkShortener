@@ -53,7 +53,7 @@
 				{{ link.dateCreated|date("d/m/Y") }}
 			</td>
 			<td>
-				<a href="{{ path('info_link', { 'link' : link.name }) }}" class="btn btn-inverse btn-mini btn-block">	Infos
+				<a href="{{ path('info_link', { 'link' : link.shortenedURL }) }}" class="btn btn-inverse btn-mini btn-block">	Infos
 				</a>
 				<div class="btn-group"  style="margin-top:5px;">
 					{% if link.enabled == 1 %}
