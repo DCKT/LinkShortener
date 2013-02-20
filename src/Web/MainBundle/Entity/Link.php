@@ -232,7 +232,7 @@ class Link
     public function __construct()
     {
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->referer = \Doctrine\Common\Collections\ArrayCollection();
+        $this->referer = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**

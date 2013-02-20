@@ -118,9 +118,11 @@ class DefaultController extends Controller
          if (!is_object($user)):
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         endif;
+
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
         $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
-        
+        $referer = $infoLink->getReferer()->toArray();
+
         // On vérifie si le lien existe
         if (!is_object($infoLink)) {
             return new Response("Lien  inexistant");
@@ -128,6 +130,7 @@ class DefaultController extends Controller
 
         return $this->render('WebMainBundle:Default:info.html.twig', array(
             'link' => $infoLink,
+            'referer' => $referer
         ));
     }
 
@@ -217,25 +220,29 @@ class DefaultController extends Controller
         else {
             // On récupère le site d'ou l'utilisateur vient
             $referer = $request->headers->get('referer');
-            if ($referer != NULL) {
-                $repoRef = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Referer');
-                $test = $infoLink->getReferer()->toArray();
+            
+            $repoRef = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Referer');
+            $test = $infoLink->getReferer()->toArray();
+            $check = false;
 
-                foreach ($test as $t) {
-                    if ($t->getWebsiteUrl() == $referer):
-                        $t->setTotal($t->setTotal() + 1);
-                        break;
-                    else:
-                        $ref = new Referer();
-                        $ref->setWebsiteUrl($referer);
-                        $ref->setTotal(1);
-                        $infoLink->addReferer($ref);
-                    endif;
-                }
-                $manager = $this->getDoctrine()->getManager();
-                $manager->persist($infoLink);
-                $manager->flush();
-            }  
+            foreach ($test as $t) {
+                if ($t->getWebsiteUrl() == "to"):
+                    $t->setTotal($t->getTotal() + 1);
+                    $check = true;
+                    break;
+                endif;
+            }
+            if ($check == false) {
+                $ref = new Referer();
+                $ref->setWebsiteUrl("to");
+                $ref->setTotal(1);
+                $infoLink->addReferer($ref);
+            }
+
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($infoLink);
+            $manager->flush();
+            
 
             $infoLink->setClicks($infoLink->getClicks() + 1);
             $lastClick = new \DateTime();

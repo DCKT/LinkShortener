@@ -17,5 +17,14 @@
 			{{ link.shortenedURL }}
 		</a>
 	</div>
+
+	<ul>
+		{% for ref in referer %}
+			<li>
+				Nom :{{ ref.websiteUrl }}
+				Nombre : {{ ref.total }}
+			</li>
+		{% endfor %}
+	</ul>
 </div>
 {% endblock %}
