@@ -213,6 +213,7 @@ class DefaultController extends Controller
             if ($referer != NULL) {
                 $nbReferer = $repo->findOneBy(array('websiteUrl' => $referer));
                 var_dump($nbReferer);
+                die();
             }  
             $infoLink->setClicks($infoLink->getClicks() + 1);
             $lastClick = new \DateTime();
