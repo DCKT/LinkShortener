@@ -124,6 +124,13 @@ class DefaultController extends Controller
         $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
         $referer = $infoLink->getReferer()->toArray();
         $country = $infoLink->getCountry()->toArray();
+
+        $direct = 0;
+        foreach ($referer as $ref) {
+            $direct += $ref->getTotal();            
+        }
+
+        $direct = $infoLink->getClicks() - $direct;
         
         // On vérifie si le lien existe
         if (!is_object($infoLink)) {
@@ -133,7 +140,8 @@ class DefaultController extends Controller
         return $this->render('WebMainBundle:Default:info.html.twig', array(
             'link' => $infoLink,
             'referer' => $referer,
-            'country' => $country
+            'country' => $country,
+            'direct' => $direct
         ));
     }
 

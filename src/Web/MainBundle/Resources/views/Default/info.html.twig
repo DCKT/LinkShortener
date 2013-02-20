@@ -57,10 +57,16 @@
 		var colorsList = ['#FACC00', '#FB9900', '#FB6600', '#FB4800', '#CB0A0A', '#F8F933'];
 
 		var colors = new Array();
+		var direct = new Array();;
 		$("li.infoPieRef").each(function(index) {
 			myData.push([$(this).data("name"), $(this).data("nombre")]);
 			colors.push(colorsList[index]);
 		});
+
+		myData.push(["Direct", {{ direct}} ]);
+		colors.push("#F8F933");
+		
+		
 
 		var myChart = new JSChart('referer', 'pie');
 		myChart.setDataArray(myData);
