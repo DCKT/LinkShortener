@@ -20,10 +20,15 @@
 
 	<ul class="info-ref">
 		{% for ref in referer %}
-			<li class="infoPie" data-name="{{ ref.websiteUrl }}" data-nombre="{{ ref.total }}">
+			<li class="infoPieRef" data-name="{{ ref.websiteUrl }}" data-nombre="{{ ref.total }}">
 				
 			</li>
 		{% endfor %}
+		{% for cou in country %}
+			<li class="infoPieCou" data-name="{{ cou.name }}" data-nombre="{{ cou.total }}">
+				
+			</li>
+		{% endfor %}		
 	</ul>
 	<div class="row">
 		<div class="span5">
@@ -46,7 +51,7 @@
 	var colorsList = ['#FACC00', '#FB9900', '#FB6600', '#FB4800', '#CB0A0A', '#F8F933'];
 
 	var colors = new Array();
-	$("li.infoPie").each(function(index) {
+	$("li.infoPieRef").each(function(index) {
 		myData.push([$(this).data("name"), $(this).data("nombre")]);
 		colors.push(colorsList[index]);
 	});
@@ -64,8 +69,24 @@
 	myChart.setSize(416, 321);
 	myChart.draw();
 
-	
-
+	var myData = new Array();
+	var colors = new Array();
+	$("li.infoPieCou").each(function(index) {
+		myData.push([$(this).data("name"), $(this).data("nombre")]);
+		colors.push(colorsList[index]);
+	});
+	var myChart = new JSChart('country', 'pie');
+	myChart.setDataArray(myData);
+	myChart.colorizePie(colors);
+	myChart.setPiePosition(308, 170);
+	myChart.setPieRadius(95);
+	myChart.setPieUnitsFontSize(8);
+	myChart.setPieUnitsColor('#474747');
+	myChart.setPieValuesColor('#474747');
+	myChart.setPieValuesOffset(-10);
+	myChart.setTitleColor('#fff');
+	myChart.setSize(416, 321);
+	myChart.draw();
 	</script>
 </div>
 {% endblock %}

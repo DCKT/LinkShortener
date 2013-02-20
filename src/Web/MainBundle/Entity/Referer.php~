@@ -35,6 +35,12 @@ class Referer
      */
     private $total;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="country", type="string", length=255)
+     */
+    private $country;
 
     /**
      * Get id
@@ -91,4 +97,6 @@ class Referer
     {
         return $this->total;
     }
+
+
 }

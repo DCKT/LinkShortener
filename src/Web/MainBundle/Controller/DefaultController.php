@@ -5,6 +5,7 @@ namespace Web\MainBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Web\MainBundle\Entity\Link;
 use Web\MainBundle\Entity\Referer;
+use Web\MainBundle\Entity\Country;
 use Symfony\Component\HttpFoundation\Response;
 use Web\MainBundle\Controller\Date;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -16,12 +17,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
     	$user = $this->container->get('security.context')->getToken()->getUser();
-        $ip = $this->get('request')->server->get('REMOTE_ADDR');
-        if (!empty($ip)) {
-           $country = file_get_contents('http://api.hostip.info/country.php?ip='.$ip);
-        }
-
-        var_dump($country);
+        
         // Si l'utilisateur n'est pas connecté, on le redirige
          if (!is_object($user)):
             return $this->redirect($this->generateUrl('fos_user_security_login'));
@@ -127,7 +123,8 @@ class DefaultController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
         $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
         $referer = $infoLink->getReferer()->toArray();
-
+        $country = $infoLink->getCountry()->toArray();
+        
         // On vérifie si le lien existe
         if (!is_object($infoLink)) {
             return new Response("Lien  inexistant");
@@ -135,7 +132,8 @@ class DefaultController extends Controller
 
         return $this->render('WebMainBundle:Default:info.html.twig', array(
             'link' => $infoLink,
-            'referer' => $referer
+            'referer' => $referer,
+            'country' => $country
         ));
     }
 
@@ -221,33 +219,56 @@ class DefaultController extends Controller
                 'csrf_token' => $csrfToken,
             ));
         }
+
         // On redirige l'user vers le lien
         else {
-            // On récupère le site d'ou l'utilisateur vient
             $referer = $request->headers->get('referer');
-            
-            if ($referer != NULL):
-                $repoRef = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Referer');
-                $test = $infoLink->getReferer()->toArray();
-                $check = false;
+            // On récupère l'ip de l'user pour déterminer son pays
+            $ip = $this->get('request')->server->get('REMOTE_ADDR');
 
-                foreach ($test as $t) {
-                    if ($t->getWebsiteUrl() == $referer):
-                        $t->setTotal($t->getTotal() + 1);
-                        $check = true;
+            if (!empty($ip)) {
+               $country = file_get_contents('http://api.hostip.info/country.php?ip='.$ip);
+            }
+
+            // On assigne le pays d'ou l'utilisateur vient
+            if (isset($country)) {
+                $cnList = $infoLink->getCountry()->toArray();
+                $new = true;
+
+                foreach ($cnList as $c) {
+                    if ($c->getName() == $country) {
+                        $c->setTotal($c->getTotal() + 1);
+                        $new = false;
+                    }
+                }
+                if ($new == true) {
+                    $cou = new Country();
+                    $cou->setName($country);
+                    $cou->setTotal(1);
+                    $infoLink->addCountry($cou);
+                }
+            }
+            
+            // On assigne le site d'ou l'utilisateur vient
+            if ($referer != NULL):
+                $refList = $infoLink->getReferer()->toArray();
+                $check = true;
+
+                foreach ($refList as $r) {
+                    if ($r->getWebsiteUrl() == $referer):
+                        $r->setTotal($r->getTotal() + 1);
+                        $check = false;
                         break;
                     endif;
                 }
-                if ($check == false):
+
+                if ($check == true):
                     $ref = new Referer();
                     $ref->setWebsiteUrl($referer);
                     $ref->setTotal(1);
+                    $ref->setCountry($country);
                     $infoLink->addReferer($ref);
                 endif;
-
-                $manager = $this->getDoctrine()->getManager();
-                $manager->persist($infoLink);
-                $manager->flush();
             endif;
 
             $infoLink->setClicks($infoLink->getClicks() + 1);

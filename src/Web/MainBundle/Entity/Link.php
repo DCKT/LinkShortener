@@ -80,6 +80,12 @@ class Link
     private $referer;
 
     /**
+    *
+    * @ORM\ManyToMany(targetEntity="Web\MainBundle\Entity\Country", cascade={"persist"})
+    */
+    private $country;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -233,6 +239,7 @@ class Link
     {
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
         $this->referer = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->country = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -322,5 +329,38 @@ class Link
     public function getReferer()
     {
         return $this->referer;
+    }
+
+    /**
+     * Add country
+     *
+     * @param \Web\MainBundle\Entity\Country $country
+     * @return Link
+     */
+    public function addCountry(\Web\MainBundle\Entity\Country $country)
+    {
+        $this->country[] = $country;
+    
+        return $this;
+    }
+
+    /**
+     * Remove country
+     *
+     * @param \Web\MainBundle\Entity\Country $country
+     */
+    public function removeCountry(\Web\MainBundle\Entity\Country $country)
+    {
+        $this->country->removeElement($country);
+    }
+
+    /**
+     * Get country
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCountry()
+    {
+        return $this->country;
     }
 }

@@ -5,12 +5,12 @@ namespace Web\MainBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Referer
+ * Country
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Web\MainBundle\Entity\RefererRepository")
+ * @ORM\Entity(repositoryClass="Web\MainBundle\Entity\CountryRepository")
  */
-class Referer
+class Country
 {
     /**
      * @var integer
@@ -24,9 +24,9 @@ class Referer
     /**
      * @var string
      *
-     * @ORM\Column(name="websiteUrl", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
-    private $websiteUrl;
+    private $name;
 
     /**
      * @var integer
@@ -47,33 +47,33 @@ class Referer
     }
 
     /**
-     * Set websiteUrl
+     * Set name
      *
-     * @param string $websiteUrl
-     * @return Referer
+     * @param string $name
+     * @return Country
      */
-    public function setWebsiteUrl($websiteUrl)
+    public function setName($name)
     {
-        $this->websiteUrl = $websiteUrl;
+        $this->name = $name;
     
         return $this;
     }
 
     /**
-     * Get websiteUrl
+     * Get name
      *
      * @return string 
      */
-    public function getWebsiteUrl()
+    public function getName()
     {
-        return $this->websiteUrl;
+        return $this->name;
     }
 
     /**
      * Set total
      *
      * @param integer $total
-     * @return Referer
+     * @return Country
      */
     public function setTotal($total)
     {

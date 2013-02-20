@@ -39,3 +39,8 @@ canvas#JSChart_referer {
 	top:-50px !important;
 	left: -115px !important;
 }
+canvas#JSChart_country {
+	position: relative;
+	top:-50px !important;
+	left: -115px !important;
+}
