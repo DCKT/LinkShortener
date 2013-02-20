@@ -50,48 +50,50 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<script type="text/javascript">
-	var myData = new Array();
-	var colorsList = ['#FACC00', '#FB9900', '#FB6600', '#FB4800', '#CB0A0A', '#F8F933'];
+	$(document).ready(function(){
+		var myData = new Array();
+		var colorsList = ['#FACC00', '#FB9900', '#FB6600', '#FB4800', '#CB0A0A', '#F8F933'];
 
-	var colors = new Array();
-	$("li.infoPieRef").each(function(index) {
-		myData.push([$(this).data("name"), $(this).data("nombre")]);
-		colors.push(colorsList[index]);
+		var colors = new Array();
+		$("li.infoPieRef").each(function(index) {
+			myData.push([$(this).data("name"), $(this).data("nombre")]);
+			colors.push(colorsList[index]);
+		});
+
+		var myChart = new JSChart('referer', 'pie');
+		myChart.setDataArray(myData);
+		myChart.colorizePie(colors);
+		myChart.setPiePosition(308, 170);
+		myChart.setPieRadius(95);
+		myChart.setPieUnitsFontSize(8);
+		myChart.setPieUnitsColor('#474747');
+		myChart.setPieValuesColor('#474747');
+		myChart.setPieValuesOffset(-10);
+		myChart.setTitleColor('#fff');
+		myChart.setSize(416, 321);
+		myChart.draw();
+
+		var myData = new Array();
+		var colors = new Array();
+		$("li.infoPieCou").each(function(index) {
+			myData.push([$(this).data("name"), $(this).data("nombre")]);
+			colors.push(colorsList[index]);
+		});
+		var myChart = new JSChart('country', 'pie');
+		myChart.setDataArray(myData);
+		myChart.colorizePie(colors);
+		myChart.setPiePosition(308, 170);
+		myChart.setPieRadius(95);
+		myChart.setPieUnitsFontSize(8);
+		myChart.setPieUnitsColor('#474747');
+		myChart.setPieValuesColor('#474747');
+		myChart.setPieValuesOffset(-10);
+		myChart.setTitleColor('#fff');
+		myChart.setSize(416, 321);
+		myChart.draw();
 	});
-
-	var myChart = new JSChart('referer', 'pie');
-	myChart.setDataArray(myData);
-	myChart.colorizePie(colors);
-	myChart.setPiePosition(308, 170);
-	myChart.setPieRadius(95);
-	myChart.setPieUnitsFontSize(8);
-	myChart.setPieUnitsColor('#474747');
-	myChart.setPieValuesColor('#474747');
-	myChart.setPieValuesOffset(-10);
-	myChart.setTitleColor('#fff');
-	myChart.setSize(416, 321);
-	myChart.draw();
-
-	var myData = new Array();
-	var colors = new Array();
-	$("li.infoPieCou").each(function(index) {
-		myData.push([$(this).data("name"), $(this).data("nombre")]);
-		colors.push(colorsList[index]);
-	});
-	var myChart = new JSChart('country', 'pie');
-	myChart.setDataArray(myData);
-	myChart.colorizePie(colors);
-	myChart.setPiePosition(308, 170);
-	myChart.setPieRadius(95);
-	myChart.setPieUnitsFontSize(8);
-	myChart.setPieUnitsColor('#474747');
-	myChart.setPieValuesColor('#474747');
-	myChart.setPieValuesOffset(-10);
-	myChart.setTitleColor('#fff');
-	myChart.setSize(416, 321);
-	myChart.draw();
 	</script>
 </div>
 {% endblock %}
