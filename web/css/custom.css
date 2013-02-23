@@ -11,7 +11,6 @@
 
 .bot-page {
 	width: 100%;
-	position: absolute;
 	bottom: 40px;
 	margin: 0;
 	text-align: center;
@@ -19,7 +18,7 @@
 }
 
 .link-list tr th{
-	font-size: 18px;
+	font-size: 16px;
 	text-align: center;
 	vertical-align: middle;
 }
@@ -27,7 +26,8 @@
 .link-list tr td{
 	vertical-align: middle;
 	text-align: center;
-	font-size: 16px;
+	font-size: 13px;
+	padding: 3px;
 }
 
 .info-ref {

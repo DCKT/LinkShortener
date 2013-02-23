@@ -3,13 +3,15 @@
 namespace Web\MainBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Security\Core\SecurityContext;
+// On utilise nos entités
 use Web\MainBundle\Entity\Link;
 use Web\MainBundle\Entity\Referer;
 use Web\MainBundle\Entity\Country;
-use Symfony\Component\HttpFoundation\Response;
-use Web\MainBundle\Controller\Date;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\Security\Core\SecurityContext;
+use Web\MainBundle\Entity\DateClick;
+
 
 class DefaultController extends Controller
 {
@@ -23,6 +25,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         endif;
 
+        
     	// Création du formulaire
     	$link = new Link();
         $form = $this->createFormBuilder($link)
@@ -94,6 +97,7 @@ class DefaultController extends Controller
             $link->setShortenedURL(implode($shortUrl));
             $link->setClicks(0);
             $link->setDateCreated($date);
+            $link->setClicksDay(0);
             $link->addUser($user);
             $link->setEnabled(1);
             $link->setTimeLastClicked($dateClicked);
@@ -122,9 +126,12 @@ class DefaultController extends Controller
 
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
         $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
+        // Récupère les sites référants et les pays
         $referer = $infoLink->getReferer()->toArray();
         $country = $infoLink->getCountry()->toArray();
+        $clicks = $infoLink->getDateClick()->toArray();
 
+        // On calcule le nombre de lien direct en fonction des réferants
         $direct = 0;
         foreach ($referer as $ref) {
             $direct += $ref->getTotal();            
@@ -141,7 +148,8 @@ class DefaultController extends Controller
             'link' => $infoLink,
             'referer' => $referer,
             'country' => $country,
-            'direct' => $direct
+            'direct' => $direct,
+            'clicks' => $clicks
         ));
     }
 
@@ -261,7 +269,7 @@ class DefaultController extends Controller
             if ($referer != NULL):
                 $refList = $infoLink->getReferer()->toArray();
                 $check = true;
-
+                // On vérifie si le site existe déjà et on l'incrémente
                 foreach ($refList as $r) {
                     if ($r->getWebsiteUrl() == $referer):
                         $r->setTotal($r->getTotal() + 1);
@@ -269,7 +277,7 @@ class DefaultController extends Controller
                         break;
                     endif;
                 }
-
+                // Sinon on l'ajoute à la base
                 if ($check == true):
                     $ref = new Referer();
                     $ref->setWebsiteUrl($referer);
@@ -279,9 +287,24 @@ class DefaultController extends Controller
                 endif;
             endif;
 
+            $dateLastClick = new \DateTime();
+            $dayClick = $infoLink->getTimeLastClicked();
+
+            // Si on a changé de jours, on ajoute une ligne
+            if($dateLastClick->format("Y-m-d") > $dayClick->format("Y-m-d")):
+                $lastDayClick = new DateClick();
+                $lastDayClick->setNbClick($infoLink->getClicksDay());
+                // On donne la date d'hier
+                $dateLastClick->sub(new \DateInterval('P1D'));
+                $lastDayClick->setDate($dateLastClick->format("Y-m-d"));
+                $infoLink->setClicksDay(1);
+                $infoLink->addDateClick($lastDayClick);
+            else:
+                $infoLink->setClicksDay($infoLink->getClicksDay() + 1);
+            endif;
+
             $infoLink->setClicks($infoLink->getClicks() + 1);
-            $lastClick = new \DateTime();
-            $infoLink->setTimeLastClicked($lastClick);
+            $infoLink->setTimeLastClicked($dateLastClick);
             $em->persist($infoLink);
             $em->flush();
 

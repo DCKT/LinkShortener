@@ -20,15 +20,17 @@
 </div>
 
 
-<table class="table table-bordered link-list">
-	<tr class="info">
-		<th>Name</th>
-		<th>Original URL</th>
-		<th>Shortened URL</th>
-		<th>Clicks</th>
-		<th>Date created</th>
-		<th>Action</th>
-	</tr>
+<table class="table table-bordered table-hover link-list">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Original URL</th>
+			<th>Shortened URL</th>
+			<th>Clicks</th>
+			<th>Date created</th>
+			<th>Action</th>
+		</tr>
+	</thead>
 
 	<tbody>
 		{% for link in link_list%}
@@ -44,7 +46,7 @@
 				{{ link.originalURL }}
 			</td>
 			<td>
-				http://suplink.com/{{ link.shortenedURL }}
+				{{ url('index') }}{{ link.shortenedURL }}
 			</td>
 			<td>
 				{{ link.clicks }}
@@ -57,11 +59,11 @@
 				</a>
 				<div class="btn-group"  style="margin-top:5px;">
 					{% if link.enabled == 1 %}
-						<a href="{{ path('disabled_link', {link : link.shortenedURL}) }}" data-name="{{ link.shortenedURL }}" class="btn btn-mini active" id="ableLink">
+						<a href="{{ path('disabled_link', {link : link.shortenedURL}) }}" data-bool="true" data-name="{{ link.shortenedURL }}" class="btn btn-mini active" id="ableLink">
 							Enabled
 						</a>
 					{% else %}
-						<a href="{{ path('disabled_link', {link : link.shortenedURL}) }}" data-name="{{ link.shortenedURL }}" class="btn btn-mini" id="ableLink">
+						<a href="{{ path('disabled_link', {link : link.shortenedURL}) }}" data-bool="false" data-name="{{ link.shortenedURL }}" class="btn btn-mini" id="ableLink">
 							Disabled
 						</a>
 					{% endif %}
@@ -101,11 +103,16 @@ $(document).ready(function(){
 			success: function() {
 				currentBtn.toggleClass('active');
 				$("tr#"+ current_row).toggleClass('warning')
-				if (currentBtn.text() == "Enabled") {
+				t = currentBtn.data("bool");
+				console.log(t);
+				console.log(t === "true");
+				if ( t === "true") {
 					currentBtn.text("Disabled");
+					currentBtn.data('bool', 'false');
 				}
 				else {
 					currentBtn.text("Enabled");
+					currentBtn.data('bool', 'true');
 				}
 			}
 		})

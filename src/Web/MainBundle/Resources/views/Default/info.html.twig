@@ -1,7 +1,7 @@
 {% extends "WebMainBundle::layout.html.twig" %}
 
 {% block body %}
-<div class="hero-unit" style="height:20px">
+<div class="hero-unit" style="height:60px">
 	<div style="margin-top:-40px">
 		<h2>
 			{{ link.name }}
@@ -12,94 +12,119 @@
 				clicks
 			</span>
 		</h2>
+		Orginal URL :
 		<a href="{{ link.originalURL }}">
 			{{ link.originalURL }}
 		</a>
-		>
-		<a href="{{ link.shortenedURL }}">
-			{{ link.shortenedURL }}
-		</a>
+		<br />
+		Shortened URL :
+		{{ url('index') }}{{ link.shortenedURL }}
 	</div>
+</div>
 
+<!-- Graphiques -->
+<div class="row">
 	<ul class="info-ref">
 		{% for ref in referer %}
-			<li class="infoPieRef" data-name="{{ ref.websiteUrl }}" data-nombre="{{ ref.total }}">
-				
-			</li>
+			<li class="infoPieRef" data-name="{{ ref.websiteUrl }}" data-nombre="{{ ref.total }}"></li>
 		{% endfor %}
 		{% for cou in country %}
-			<li class="infoPieCou" data-name="{{ cou.name }}" data-nombre="{{ cou.total }}">
-				
-			</li>
-		{% endfor %}		
+			<li class="infoPieCou" data-name="{{ cou.name }}" data-nombre="{{ cou.total }}"></li>
+		{% endfor %}	
+		{% for click in clicks %}	
+			<li class="infoPieClick" data-nb="{{ click.nbClick }}" data-date="{{ click.date|date('d-m-Y') }}"></li>
+		{% endfor %}
 	</ul>
-
-	<div class="row">
-		<div class="span5">
-			<div class="page-header center">
-				<h3>Referer</h3>
-			</div>
-			<div id="referer">
-			</div>
-		</div>
-		<div class="span5">
-			<div class="page-header center">
-				<h3>Country</h3>
-			</div>
-			<div id="country">
-			</div>
-		</div>
+	<div class="span12">
+		<div id="clickPerDay" style="height: 250px;"></div>
 	</div>
-
-	<script type="text/javascript">
-	$(document).ready(function(){
-		var myData = new Array();
-		var colorsList = ['#FACC00', '#FB9900', '#FB6600', '#FB4800', '#CB0A0A', '#F8F933'];
-
-		var colors = new Array();
-		var direct = new Array();;
-		$("li.infoPieRef").each(function(index) {
-			myData.push([$(this).data("name"), $(this).data("nombre")]);
-			colors.push(colorsList[index]);
-		});
-
-		myData.push(["Direct", {{ direct}} ]);
-		colors.push("#F8F933");
-		
-		
-
-		var myChart = new JSChart('referer', 'pie');
-		myChart.setDataArray(myData);
-		myChart.colorizePie(colors);
-		myChart.setPiePosition(308, 170);
-		myChart.setPieRadius(95);
-		myChart.setPieUnitsFontSize(8);
-		myChart.setPieUnitsColor('#474747');
-		myChart.setPieValuesColor('#474747');
-		myChart.setPieValuesOffset(-10);
-		myChart.setTitleColor('#fff');
-		myChart.setSize(416, 321);
-		myChart.draw();
-
-		var myData = new Array();
-		var colors = new Array();
-		$("li.infoPieCou").each(function(index) {
-			myData.push([$(this).data("name"), $(this).data("nombre")]);
-			colors.push(colorsList[index]);
-		});
-		var myChart = new JSChart('country', 'pie');
-		myChart.setDataArray(myData);
-		myChart.colorizePie(colors);
-		myChart.setPiePosition(308, 170);
-		myChart.setPieRadius(95);
-		myChart.setPieUnitsFontSize(8);
-		myChart.setPieUnitsColor('#474747');
-		myChart.setPieValuesColor('#474747');
-		myChart.setPieValuesOffset(-10);
-		myChart.setTitleColor('#fff');
-		myChart.setSize(416, 321);
-		myChart.draw();
-	});
-	</script>
 </div>
+
+<div class="row">
+	<div class="span5 offset1">
+		<div class="page-header center">
+			<h3>Referer</h3>
+		</div>
+		<div id="referer"></div>
+	</div>
+	<div class="span5">
+		<div class="page-header center">
+			<h3>Country</h3>
+		</div>
+		<div id="country"></div>
+	</div>
+</div>
+
+<script type="text/javascript">
+// Code pour les referer et pays
+$(document).ready(function(){
+	// Graph sur les sites référants
+	var myData = new Array();
+	var colorsList = ['#FACC00', '#FB9900', '#FB6600', '#FB4800', '#CB0A0A', '#F8F933'];
+
+	var colors = new Array();
+	var direct = new Array();;
+	$("li.infoPieRef").each(function(index) {
+		myData.push([$(this).data("name"), $(this).data("nombre")]);
+		colors.push(colorsList[index]);
+	});
+
+	myData.push(["Direct", {{ direct}} ]);
+	colors.push("#F8F933");
+	
+	
+
+	var myChart = new JSChart('referer', 'pie');
+	myChart.setDataArray(myData);
+	myChart.colorizePie(colors);
+	myChart.setPiePosition(308, 170);
+	myChart.setPieRadius(95);
+	myChart.setPieUnitsFontSize(8);
+	myChart.setPieUnitsColor('#474747');
+	myChart.setPieValuesColor('#474747');
+	myChart.setPieValuesOffset(-10);
+	myChart.setTitleColor('#fff');
+	myChart.setSize(416, 321);
+	myChart.draw();
+
+	// Graph sur les pays
+	var myData = new Array();
+	var colors = new Array();
+	$("li.infoPieCou").each(function(index) {
+		myData.push([$(this).data("name"), $(this).data("nombre")]);
+		colors.push(colorsList[index]);
+	});
+	var myChart = new JSChart('country', 'pie');
+	myChart.setDataArray(myData);
+	myChart.colorizePie(colors);
+	myChart.setPiePosition(308, 170);
+	myChart.setPieRadius(95);
+	myChart.setPieUnitsFontSize(8);
+	myChart.setPieUnitsColor('#474747');
+	myChart.setPieValuesColor('#474747');
+	myChart.setPieValuesOffset(-10);
+	myChart.setTitleColor('#fff');
+	myChart.setSize(416, 321);
+	myChart.draw();
+
+
+	// Graph sur le nombre de clics par jours
+	var clicksArray = new Array();
+	$("li.infoPieClick").each(function(index) {
+		clicksArray.push({
+			year: $(this).data('date'),
+			value: $(this).data('nb')
+		});
+	});
+
+	Morris.Bar({
+	  element: 'clickPerDay',
+	  data: clicksArray,
+	  xkey: 'year',
+	  ykeys: ['value'],
+	  labels: ['Nb clicks']
+	});
+});
+</script>
+
 {% endblock %}

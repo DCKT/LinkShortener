@@ -50,6 +50,12 @@ class Link
     private $clicks;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="clicksDay", type="integer")
+     */
+    private $clicksDay;    
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="dateCreated", type="date")
@@ -84,6 +90,12 @@ class Link
     * @ORM\ManyToMany(targetEntity="Web\MainBundle\Entity\Country", cascade={"persist"})
     */
     private $country;
+
+    /**
+    *
+    * @ORM\ManyToMany(targetEntity="Web\MainBundle\Entity\DateClick", cascade={"persist"})
+    */
+    private $dateClick;
 
     /**
      * Get id
@@ -362,5 +374,61 @@ class Link
     public function getCountry()
     {
         return $this->country;
+    }
+
+    /**
+     * Set clicksDay
+     *
+     * @param integer $clicksDay
+     * @return Link
+     */
+    public function setClicksDay($clicksDay)
+    {
+        $this->clicksDay = $clicksDay;
+    
+        return $this;
+    }
+
+    /**
+     * Get clicksDay
+     *
+     * @return integer 
+     */
+    public function getClicksDay()
+    {
+        return $this->clicksDay;
+    }
+
+    /**
+     * Add dateClick
+     *
+     * @param \Web\MainBundle\Entity\DateClick $dateClick
+     * @return Link
+     */
+    public function addDateClick(\Web\MainBundle\Entity\DateClick $dateClick)
+    {
+        $this->dateClick[] = $dateClick;
+    
+        return $this;
+    }
+
+    /**
+     * Remove dateClick
+     *
+     * @param \Web\MainBundle\Entity\DateClick $dateClick
+     */
+    public function removeDateClick(\Web\MainBundle\Entity\DateClick $dateClick)
+    {
+        $this->dateClick->removeElement($dateClick);
+    }
+
+    /**
+     * Get dateClick
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDateClick()
+    {
+        return $this->dateClick;
     }
 }
