@@ -63,3 +63,9 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: Web\UserBundle\Entity\User
+    # Utilise le système de confirmation par mail de FOSUserBundle
+    #registration:
+    #    confirmation:
+    #        from_email:
+    #            address:        registration@suplink.com
+    #            sender_name:    suplink Registration

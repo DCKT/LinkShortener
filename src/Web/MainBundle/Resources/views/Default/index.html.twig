@@ -80,8 +80,8 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#removeLink").click(function(e){
-		var current_row = $(this).data('name');
 		e.preventDefault();
+		var current_row = $(this).data('name');
 		$.ajax({
 			type: "POST",
 			data: current_row,
@@ -93,9 +93,9 @@ $(document).ready(function(){
 	});
 
 	$("#ableLink").click(function(e){
+		e.preventDefault();
 		var currentBtn = $("a#ableLink");
 		var current_row = $(this).data('name');
-		e.preventDefault();
 		$.ajax({
 			type: "POST",
 			data: current_row,
@@ -106,13 +106,13 @@ $(document).ready(function(){
 				t = currentBtn.data("bool");
 				console.log(t);
 				console.log(t === "true");
-				if ( t === "true") {
+				if ( t === true) {
 					currentBtn.text("Disabled");
 					currentBtn.data('bool', 'false');
 				}
 				else {
 					currentBtn.text("Enabled");
-					currentBtn.data('bool', 'true');
+					currentBtn.data('bool', true);
 				}
 			}
 		})

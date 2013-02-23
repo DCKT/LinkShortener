@@ -34,6 +34,7 @@
 		{% for click in clicks %}	
 			<li class="infoPieClick" data-nb="{{ click.nbClick }}" data-date="{{ click.date|date('d-m-Y') }}"></li>
 		{% endfor %}
+		<li id="clickToday" data-datetoday="{{ link.timeLastClicked|date('Y-m-d') }}"data-clicktoday="{{ link.clicksDay }}"></li>
 	</ul>
 	<div class="span12">
 		<div id="clickPerDay" style="height: 250px;"></div>
@@ -116,7 +117,10 @@ $(document).ready(function(){
 			value: $(this).data('nb')
 		});
 	});
-
+	clicksArray.push({
+		year: $("#clickToday").data("datetoday"),
+		value: $("#clickToday").data("clicktoday")
+	});
 	Morris.Bar({
 	  element: 'clickPerDay',
 	  data: clicksArray,

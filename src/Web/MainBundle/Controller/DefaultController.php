@@ -194,10 +194,11 @@ class DefaultController extends Controller
     // Méthode permettant de rediriger les short URL
     public function redirectToAction($link)
     {
-
+        
         $em = $this->getDoctrine()->getManager();
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
         $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
+        
         $request = $this->container->get('request');
 
         /* 
@@ -238,6 +239,11 @@ class DefaultController extends Controller
 
         // On redirige l'user vers le lien
         else {
+            
+
+            if ($infoLink->getEnabled() != 1):
+                return new Response("Ce lien est désactivé.");
+            endif;
             $referer = $request->headers->get('referer');
             // On récupère l'ip de l'user pour déterminer son pays
             $ip = $this->get('request')->server->get('REMOTE_ADDR');
@@ -308,12 +314,8 @@ class DefaultController extends Controller
             $em->persist($infoLink);
             $em->flush();
 
-            // Si le lien est toujours actif
-            if ($infoLink->getEnabled() == 1):
-                return $this->redirect($infoLink->getOriginalURL());
-            else:
-                return new Response("Ce lien est désactivé.");
-            endif;
+
+            return $this->redirect($infoLink->getOriginalURL());
         }
     }
     protected function renderLogin(array $data)
