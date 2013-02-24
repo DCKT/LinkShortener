@@ -1,19 +1,17 @@
 WebProject
 ==========
 
-Projet de fin d'année SUPINFO ( Web )
+Projet PHP SUPINFO
 
 
-<h2>1- Wiki d'installation</H2>
-
-- Clonner le dépot sur votre machine
+<h2>Wiki d'installation</H2>
 
 - Vérifier votre configuration :<br />
 <code>
 php app/check.php
 </code>
 
-- Installer les vendors via composer :<br />
+- Mettre à jours les vendors via composer :<br />
 <code>
 curl -s https://getcomposer.org/installer | php
 </code>
@@ -22,14 +20,16 @@ curl -s https://getcomposer.org/installer | php
 php composer.phar update
 </code>
 
-- Utilisation d'un vhost<br />
+- Créer la base de donnée (si ça n'est pas déjà fait)
 <code>
-http://blog.dck.me/post/40188913987/creer-un-vhost-pour-vos-projets-sous-symfony
+php app/console doctrine:database:create
 </code>
 
-- Route principale
-<br />
+- Mettre à jours la base de donnée
 <code>
-http://local.webproject.com/app_dev.php/
+php app/console doctrine:schema:update --force
 </code>
 
+=========================
+Travailler en app_dev.php 
+=========================

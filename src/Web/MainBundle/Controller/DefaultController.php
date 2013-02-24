@@ -126,6 +126,11 @@ class DefaultController extends Controller
 
         $repo = $this->getDoctrine()->getManager()->getRepository('WebMainBundle:Link');
         $infoLink = $repo->findOneBy(array('shortenedURL' => $link ));
+         // On vérifie si le lien existe
+        if (!is_object($infoLink)) {
+            return new Response("Lien  inexistant");
+        }
+
         // Récupère les sites référants et les pays
         $referer = $infoLink->getReferer()->toArray();
         $country = $infoLink->getCountry()->toArray();
@@ -138,12 +143,7 @@ class DefaultController extends Controller
         }
 
         $direct = $infoLink->getClicks() - $direct;
-        
-        // On vérifie si le lien existe
-        if (!is_object($infoLink)) {
-            return new Response("Lien  inexistant");
-        }
-
+       
         return $this->render('WebMainBundle:Default:info.html.twig', array(
             'link' => $infoLink,
             'referer' => $referer,
@@ -239,11 +239,10 @@ class DefaultController extends Controller
 
         // On redirige l'user vers le lien
         else {
-            
-
             if ($infoLink->getEnabled() != 1):
                 return new Response("Ce lien est désactivé.");
             endif;
+
             $referer = $request->headers->get('referer');
             // On récupère l'ip de l'user pour déterminer son pays
             $ip = $this->get('request')->server->get('REMOTE_ADDR');
@@ -297,7 +296,7 @@ class DefaultController extends Controller
             $dayClick = $infoLink->getTimeLastClicked();
 
             // Si on a changé de jours, on ajoute une ligne
-            if($dateLastClick->format("Y-m-d") > $dayClick->format("Y-m-d")):
+            if($dateLastClick->format("Y-m-d") > $dayClick):
                 $lastDayClick = new DateClick();
                 $lastDayClick->setNbClick($infoLink->getClicksDay());
                 // On donne la date d'hier

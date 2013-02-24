@@ -3,14 +3,8 @@
 {% block fos_user_content %}
 {% block body %}
 
-{% if form_errors(form) %}
-<div class="alert alert-danger">
-	  <button type="button" class="close" data-dismiss="alert">&times;</button>
-	  {{ form_errors(form)}}
-</div>
-{% endif %}
-<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
 
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
 	{{ form_label (form.username, "Username :") }}
     {{ form_widget (form.username) }}
 
