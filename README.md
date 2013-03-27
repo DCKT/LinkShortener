@@ -1,7 +1,11 @@
-WebProject
+LinkShortener
 ==========
 
-Projet PHP SUPINFO
+LinkShortener est un raccourcisseur d'URL avec statistiques intégrées :
+ - Nombres de clics
+ - Nombres de visiteurs par jour
+ - Sites référents 
+ - Pays des visiteurs
 
 
 <h2>Wiki d'installation</H2>
